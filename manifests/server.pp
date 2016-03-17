@@ -15,10 +15,13 @@ class ssh::server (
   validate_bool($print_mod)
 
   $_challenge_response_authentication = bool2str(
-    $challenge_response_authentication)
-  $_password_authentication           = bool2str($password_authentication)
-  $_x11_forwading                     = bool2str($x11_forwading)
-  $_print_mod                         = bool2str($print_mod)
+    $challenge_response_authentication, 'yes', 'no')
+  $_password_authentication           = bool2str(
+    $password_authentication, 'yes', 'no')
+  $_x11_forwading                     = bool2str(
+    $x11_forwading, 'yes', 'no')
+  $_print_mod                         = bool2str(
+    $print_mod, 'yes', 'no')
 
   ensure_packages([$package])
   augeas {'/etc/ssh/sshd_config':
