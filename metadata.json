@@ -1,0 +1,14 @@
+{
+  "name": "icann-ssh",
+  "version": "0.1.0",
+  "author": "john.bond@icann.org",
+  "summary": "Module to manage sshclient and server config",
+  "license": "Apache 2.0",
+  "source": "https://github.com/icann-dns/puppet-ssh",
+  "project_page": "https://github.com/icann-dns/puppet-ssh",
+  "issues_url": "https://github.com/icann-dns/puppet-ssh/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
