@@ -9,59 +9,140 @@
     * [Setup requirements](#setup-requirements)
     * [Beginning with ssh](#beginning-with-ssh)
 4. [Usage - Configuration options and additional functionality](#usage)
+    * [Manage client and server](#manage-client-and-server)
+    * [SSH client](#ssh-client)
+    * [SSH Server](#ssh-server)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+    * [Classes](#classes)
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+This module installs and manages openssh-client and openssh-server
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
-
+This module uses augeas to manage sshd\_config and file\_line to manage ssh\_config  
 ## Setup
 
 ### What ssh affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* installs ssh client packages
+* installes ssh server pacvkages
+* manages /etc/ssh/ssh\_config
+* manages /etc/ssh/sshd\_config
 
 ### Setup Requirements **OPTIONAL**
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+* stdlib 4.6.0
 
 ### Beginning with ssh
 
-The very basic steps needed for a user to get the module up and running.
+just add the ssh class
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+```puppet
+class {'::ssh' }
+```
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+### Manage client and server
+
+The main ssh class has two parameters to allow you to decide if you want to 
+manage both the client and the server.
+
+```puppet
+class {'::ssh' 
+  manage_client => false,
+  manage_server => true,
+}
+```
+
+of with hiera
+
+```yaml
+ssh::manage_client: false
+ssh::manage_server: true
+```
+
+### SSH Client
+
+The ssh client currently only supports `CheckHostIP`
+
+```puppet
+class {'::ssh::client' 
+  check_host_ip => true,
+}
+```
+
+of with hiera
+
+```yaml
+ssh::client::check_host_ip: true
+```
+
+### SSH Server
+
+The ssh server class manages a reduced set of parameters used by sshd
+
+```puppet
+class {'::ssh::server' 
+  password_authentication => false,
+  x11_forwading           => false,
+}
+```
+
+of with hiera
+
+```yaml
+ssh::server::password_authentication: false
+ssh::server::x11_forwading: false
+```
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Classes
+
+#### Public Classes
+
+* [`ssh`](#class-ssh)
+* [`ssh::client`](#class-sshclient)
+* [`ssh::server`](#class-sshserver)
+
+#### Private Classes
+
+* [`ssh::params`](#class-sshparams)
+
+#### Class: `ssh`
+
+Main class, includes all other classes
+
+##### Parameters (all optional)
+
+* `manage\_client`: run `ssh::client`. Valid options: 'true' and 'false'. Default: 'false'.
+* `manage\_server`: run `ssh::server`. Valid options: 'true' and 'false'. Default: 'false'. 
+
+#### Class: `ssh::client`
+
+Manage openssh client
+
+##### Parameters (all optional)
+
+* `package`: Specifies the package to install. Valid options: string. Default: os specific
+* `check_host_ip`: Specifies whether to set CheckHostIP. Valid options: 'true' and 'false'. Default: 'false'.
+
+#### Class: `ssh::server`
+
+Manage openssh server
+
+##### Parameters (all optional)
+
+* `package`: Specifies the package to install. Valid options: string. Default: os specific
+* `challenge\_response\_authentication`: Specifies whether to set ChallengeResponseAuthentication. Valid options: 'true' and 'false'. Default: 'false'.
+* `password\_authentication`: Specifies whether to set PasswordAuthentication. Valid options: 'true' and 'false'. Default: 'true'.
+* `x11\_forwading`: Specifies whether to set X11Forwarding. Valid options: 'true' and 'false'. Default: 'true'.
+* `print\_mod`: Specifies whether to set PrintMotd. Valid options: 'true' and 'false'. Default: 'false'.
 
 ## Limitations
 
@@ -69,11 +150,5 @@ This is where you list OS compatibility, version compatibility, etc.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+This module is tested on Ubuntu 12.04, and 14.04 and FreeBSD 10 
 
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
