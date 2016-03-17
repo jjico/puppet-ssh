@@ -120,8 +120,8 @@ Main class, includes all other classes
 
 ##### Parameters (all optional)
 
-* `manage\_client`: run `ssh::client`. Valid options: 'true' and 'false'. Default: 'false'.
-* `manage\_server`: run `ssh::server`. Valid options: 'true' and 'false'. Default: 'false'. 
+* `manage_client`: run `ssh::client`. Valid options: 'true' and 'false'. Default: 'false'.
+* `manage_server`: run `ssh::server`. Valid options: 'true' and 'false'. Default: 'false'. 
 
 #### Class: `ssh::client`
 
@@ -139,10 +139,10 @@ Manage openssh server
 ##### Parameters (all optional)
 
 * `package`: Specifies the package to install. Valid options: string. Default: os specific
-* `challenge\_response\_authentication`: Specifies whether to set ChallengeResponseAuthentication. Valid options: 'true' and 'false'. Default: 'false'.
-* `password\_authentication`: Specifies whether to set PasswordAuthentication. Valid options: 'true' and 'false'. Default: 'true'.
-* `x11\_forwading`: Specifies whether to set X11Forwarding. Valid options: 'true' and 'false'. Default: 'true'.
-* `print\_mod`: Specifies whether to set PrintMotd. Valid options: 'true' and 'false'. Default: 'false'.
+* `challenge_response_authentication`: Specifies whether to set ChallengeResponseAuthentication. Valid options: 'true' and 'false'. Default: 'false'.
+* `password_authentication`: Specifies whether to set PasswordAuthentication. Valid options: 'true' and 'false'. Default: 'true'.
+* `x11_forwading`: Specifies whether to set X11Forwarding. Valid options: 'true' and 'false'. Default: 'true'.
+* `print_mod`: Specifies whether to set PrintMotd. Valid options: 'true' and 'false'. Default: 'false'.
 
 ## Limitations
 
