@@ -20,6 +20,7 @@ group :development, :unit_tests do
   gem 'rspec-puppet', '>= 2.3.2',  :require => false
   gem 'simplecov',                 :require => false
   gem 'rspec-puppet-facts',        :require => false
+  gem 'coveralls',                 :require => false
 end
 group :system_tests do
   gem 'beaker-rspec',                  *location_for(ENV['BEAKER_RSPEC_VERSION'] || '>= 3.4')
