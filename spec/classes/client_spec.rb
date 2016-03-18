@@ -10,16 +10,16 @@ describe 'ssh::client' do
       context 'with defaults' do
         it { is_expected.to contain_file_line('CheckHostIP').with(
           :ensure => 'absent',
-          :line   => 'CheckHostIP no',
+          :line   => "    CheckHostIP no",
           :path   => '/etc/ssh/ssh_config'
         )}
       end
 
       context 'enable CheckHostIP' do
-        let(:params) {{ :check_host_ip => true }}
+        let(:params) {{ :check_host_ip => false }}
         it { is_expected.to contain_file_line('CheckHostIP').with(
           :ensure => 'present',
-          :line   => 'CheckHostIP no',
+          :line   => "    CheckHostIP no",
           :path   => '/etc/ssh/ssh_config'
         )}
       end

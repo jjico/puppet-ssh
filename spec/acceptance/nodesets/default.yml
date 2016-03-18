@@ -7,4 +7,4 @@ HOSTS:
     hypervisor: vagrant
 CONFIG:
   log_level   : debug
-  type: git
+#  type: git
