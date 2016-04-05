@@ -16,12 +16,16 @@ class ssh::client (
 
   if $package {
     ensure_packages([$package])
+    $require = Package[$package]
+  } else {
+    $require = undef
   }
+
 
   file_line { 'CheckHostIP':
     ensure  => $check_host_ip_ensure,
     line    => '    CheckHostIP no',
     path    => '/etc/ssh/ssh_config',
-    require => Package[$package],
+    require => $require,
   }
 }

@@ -25,10 +25,13 @@ class ssh::server (
 
   if $package {
     ensure_packages([$package])
+    $require = Package[$package]
+  } else {
+    $require = undef
   }
   augeas {'/etc/ssh/sshd_config':
     context => '/files/etc/ssh/sshd_config',
-    require => Package[$package],
+    require => $require,
     changes => [
       "set ChallengeResponseAuthentication ${_challenge_response_authentication}",
       "set PasswordAuthentication ${_password_authentication}",
