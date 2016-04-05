@@ -14,7 +14,9 @@ class ssh::client (
     $check_host_ip_ensure = 'present'
   }
 
-  ensure_packages([$package])
+  if $package {
+    ensure_packages([$package])
+  }
 
   file_line { 'CheckHostIP':
     ensure  => $check_host_ip_ensure,

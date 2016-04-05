@@ -23,7 +23,9 @@ class ssh::server (
   $_print_mod                         = bool2str(
     $print_mod, 'yes', 'no')
 
-  ensure_packages([$package])
+  if $package {
+    ensure_packages([$package])
+  }
   augeas {'/etc/ssh/sshd_config':
     context => '/files/etc/ssh/sshd_config',
     require => Package[$package],
