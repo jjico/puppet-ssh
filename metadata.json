@@ -1,6 +1,6 @@
 {
   "name": "icann-ssh",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "john.bond@icann.org",
   "summary": "Module to manage sshclient and server config",
   "license": "Apache-2.0",
