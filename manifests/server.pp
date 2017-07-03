@@ -37,6 +37,6 @@ class ssh::server (
       "set PasswordAuthentication ${_password_authentication}",
       "set X11Forwarding ${_x11_forwading}",
       "set PrintMotd ${_print_mod}",
-    ]
+    ],
   }
 }
