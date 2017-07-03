@@ -1,19 +1,51 @@
 ---
 sudo: false
+dist: trusty
 language: ruby
 cache: bundler
-bundler_args: --without system_tests
-script: "bundle exec rake validate lint spec"
+bundler_args: --without system_tests development
+before_install:
+  - bundle -v
+  - rm Gemfile.lock || true
+  - gem update --system
+  - gem update bundler
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
 matrix:
   fast_finish: true
   include:
-  - rvm: 2.1.6
-    env: PUPPET_GEM_VERSION="~> 4.0" STRICT_VARIABLES="yes"
-  - rvm: 2.1.5
-    env: PUPPET_GEM_VERSION="~> 3.0" FUTURE_PARSER="yes"
-  - rvm: 2.1.5
-    env: PUPPET_GEM_VERSION="~> 3.0"
-  - rvm: 1.9.3
-    env: PUPPET_GEM_VERSION="~> 3.0"
+  - rvm: 2.1.9
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=test
+  - rvm: 2.2.7
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=test
+  - rvm: 2.3.4
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=test
+  - rvm: 2.4.1
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=test
+  - rvm: 2.4.1
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=rubocop
+  - rvm: 2.4.1
+    bundler_args: --without system_tests development
+    env: PUPPET_VERSION="~> 4.0" CHECK=build DEPLOY_TO_FORGE=yes
 notifications:
   email: false
+deploy:
+  provider: puppetforge
+  deploy:
+    branch: ha-bug-puppet-forge
+  user: icann
+  password:
+    secure: "UtDhY9wRhpnHb5qiZWGZv5Sej7/vT7JICz9FZ3c6pbO7O7/Bwc4Vyw9Iwl9Y8DeMbDHelutYAH5xzCXHHJRmyhWpmVqqYWVF+nWSX36fXYi2uGtL3vmyh+sJo8DWI1BC3VUGIu3I4WZkCSpxkM0i6QsLnxqJf7ODeZQX6Na41ivuWMuHP2dVs+qU0wjreuNsLJAMVeDGp7vMoy6la0cPgHzN0MdP3LlnthGKIsPPe3NAwFAP5digbbkNtisRB/4OJ94rh4iIFmczfJoQyMtgcevwWNNp21t0S8Fy2ZAbMPOFsOJp+lcY/iN2RBZxiosEZfmY4tcanBKzW104sIW66kp+7qJqv83BT6vUwpOnx7QWMeivEzgqU5y5n2qacyyi2q8sbBZTxSHaj4GSFsWCLmPZzjUVRP5gMDM40saI1nxlXj/wg5RyeOCN3euJsxnC1MtA7wODyHqzsc7bZfgF2P3TFtb72v4IOsMTKPhw0z7OJtRVyWndy7YISmApJAonYK3qOzkxD4YYFanph4KyjPIIcpseejbAKuR3lIEvDKe+Wigg4XCUYwMlLSU8h+LiHI/BvyMpYMnRxhaOlil+Wj51+H4ly8K8Uuhrp7rsRnCs/g9f4TwZ66aCW2EukTfe182intxn3RAu2a0zdNCKYzp3MQRqPoK+dXi2NQOcG/k="
+  on:
+    tags: true
+    # all_branches is required to use tags
+    all_branches: true
+    # Only publish the build marked with "DEPLOY_TO_FORGE"
+    condition: "$DEPLOY_TO_FORGE = yes"
