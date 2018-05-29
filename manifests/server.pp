@@ -1,11 +1,11 @@
 # == Class: ssh
 #
 class ssh::server (
-  String $package                           = $::ssh::params::server_package,
   Boolean $challenge_response_authentication = false,
   Boolean $password_authentication           = true,
   Boolean $x11_forwading                     = true,
   Boolean $print_mod                         = false,
+  Optional[String] $package         = $::ssh::params::server_package,
 ) inherits ssh::params {
 
   $_challenge_response_authentication = bool2str(
