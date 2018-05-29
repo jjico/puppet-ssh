@@ -1,12 +1,9 @@
 # == Class: ssh
 #
 class ssh::client (
-  $package       = $::ssh::params::client_package,
-  $check_host_ip = true,
+  String  $package       = $::ssh::params::client_package,
+  Boolean $check_host_ip = true,
 ) inherits ssh::params {
-
-  validate_string($package)
-  validate_bool($check_host_ip)
 
   if $check_host_ip {
     $check_host_ip_ensure = 'absent'
@@ -20,8 +17,6 @@ class ssh::client (
   } else {
     $require = undef
   }
-
-
   file_line { 'CheckHostIP':
     ensure  => $check_host_ip_ensure,
     line    => '    CheckHostIP no',

@@ -1,18 +1,12 @@
 # == Class: ssh
 #
 class ssh::server (
-  $package                           = $::ssh::params::server_package,
-  $challenge_response_authentication = false,
-  $password_authentication           = true,
-  $x11_forwading                     = true,
-  $print_mod                         = false,
+  String $package                           = $::ssh::params::server_package,
+  Boolean $challenge_response_authentication = false,
+  Boolean $password_authentication           = true,
+  Boolean $x11_forwading                     = true,
+  Boolean $print_mod                         = false,
 ) inherits ssh::params {
-
-  validate_string($package)
-  validate_bool($challenge_response_authentication)
-  validate_bool($password_authentication)
-  validate_bool($x11_forwading)
-  validate_bool($print_mod)
 
   $_challenge_response_authentication = bool2str(
     $challenge_response_authentication, 'yes', 'no')
