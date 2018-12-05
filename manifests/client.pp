@@ -1,9 +1,9 @@
 # == Class: ssh
 #
 class ssh::client (
-  Optional[String] $package = $::ssh::params::client_package,
+  Optional[String] $package = $client_package,
   Boolean          $check_host_ip = true,
-) inherits ssh::params {
+) {
 
   if $check_host_ip {
     $check_host_ip_ensure = 'absent'

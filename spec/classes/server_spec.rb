@@ -5,20 +5,32 @@ require 'spec_helper'
 describe 'ssh::server' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
-      let(:facts) do
-        facts
+      let(:facts) { facts }
+
+      case facts[:operatingsystem]
+      when 'FreeBSD'
+        let(:group) { 'wheel' }
+      else
+        let(:group) { 'root' }
       end
 
       context 'with defaults' do
         it 'update sshd config' do
-          is_expected.to contain_augeas('/etc/ssh/sshd_config').with(
-            context: '/files/etc/ssh/sshd_config',
-            changes: [
-              'set ChallengeResponseAuthentication no',
-              'set PasswordAuthentication yes',
-              'set X11Forwarding yes',
-              'set PrintMotd no'
-            ]
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication prohibit-password$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication no$},
+          ).with_content(
+            %r{^PasswordAuthentication yes$},
+          ).with_content(
+            %r{^X11Forwarding yes$},
+          ).with_content(
+            %r{^PrintMotd no$},
           )
         end
       end
@@ -27,14 +39,21 @@ describe 'ssh::server' do
         let(:params) { { challenge_response_authentication: true } }
 
         it 'update sshd config' do
-          is_expected.to contain_augeas('/etc/ssh/sshd_config').with(
-            context: '/files/etc/ssh/sshd_config',
-            changes: [
-              'set ChallengeResponseAuthentication yes',
-              'set PasswordAuthentication yes',
-              'set X11Forwarding yes',
-              'set PrintMotd no'
-            ]
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication prohibit-password$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication yes$},
+          ).with_content(
+            %r{^PasswordAuthentication yes$},
+          ).with_content(
+            %r{^X11Forwarding yes$},
+          ).with_content(
+            %r{^PrintMotd no$},
           )
         end
       end
@@ -43,14 +62,21 @@ describe 'ssh::server' do
         let(:params) { { password_authentication: false } }
 
         it 'update sshd config' do
-          is_expected.to contain_augeas('/etc/ssh/sshd_config').with(
-            context: '/files/etc/ssh/sshd_config',
-            changes: [
-              'set ChallengeResponseAuthentication no',
-              'set PasswordAuthentication no',
-              'set X11Forwarding yes',
-              'set PrintMotd no'
-            ]
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication prohibit-password$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication no$},
+          ).with_content(
+            %r{^PasswordAuthentication no$},
+          ).with_content(
+            %r{^X11Forwarding yes$},
+          ).with_content(
+            %r{^PrintMotd no$},
           )
         end
       end
@@ -59,30 +85,67 @@ describe 'ssh::server' do
         let(:params) { { x11_forwading: false } }
 
         it 'update sshd config' do
-          is_expected.to contain_augeas('/etc/ssh/sshd_config').with(
-            context: '/files/etc/ssh/sshd_config',
-            changes: [
-              'set ChallengeResponseAuthentication no',
-              'set PasswordAuthentication yes',
-              'set X11Forwarding no',
-              'set PrintMotd no'
-            ]
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication prohibit-password$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication no$},
+          ).with_content(
+            %r{^PasswordAuthentication yes$},
+          ).with_content(
+            %r{^X11Forwarding no$},
+          ).with_content(
+            %r{^PrintMotd no$},
           )
         end
       end
 
-      context 'change print_mod' do
+      context 'change print_motd' do
         let(:params) { { print_mod: true } }
 
         it 'update sshd config' do
-          is_expected.to contain_augeas('/etc/ssh/sshd_config').with(
-            context: '/files/etc/ssh/sshd_config',
-            changes: [
-              'set ChallengeResponseAuthentication no',
-              'set PasswordAuthentication yes',
-              'set X11Forwarding yes',
-              'set PrintMotd yes'
-            ]
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication prohibit-password$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication no$},
+          ).with_content(
+            %r{^PasswordAuthentication yes$},
+          ).with_content(
+            %r{^X11Forwarding yes$},
+          ).with_content(
+            %r{^PrintMotd yes$},
+          )
+        end
+      end
+
+      context 'change root authentication' do
+        let(:params) { { root_authentication: false } }
+
+        it 'update sshd config' do
+          is_expected.to contain_file('/etc/ssh/sshd_config').with(
+            ensure: 'file',
+            mode: '0644',
+            user: 'root',
+            group: group,
+          ).with_content(
+            %r{^RootAuthentication no$},
+          ).with_content(
+            %r{^ChallengeResponseAuthentication no$},
+          ).with_content(
+            %r{^PasswordAuthentication yes$},
+          ).with_content(
+            %r{^X11Forwarding yes$},
+          ).with_content(
+            %r{^PrintMotd no$},
           )
         end
       end
@@ -108,6 +171,12 @@ describe 'ssh::server' do
       context 'pass incorrect print_mod' do
         let(:params) { { print_mod: 'foo' } }
 
+        it { expect { subject.call }.to raise_error(Puppet::Error) }
+      end
+
+      context 'pass incorrect root_authentication' do
+        let(:params) { { root_authentication: 'foo' } }
+        
         it { expect { subject.call }.to raise_error(Puppet::Error) }
       end
 

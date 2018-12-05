@@ -24,7 +24,7 @@ This module installs and manages openssh-client and openssh-server
 
 ## Module Description
 
-This module uses augeas to manage sshd\_config and file\_line to manage ssh\_config  
+This module uses templating to manage sshd\_config and file\_line to manage ssh\_config  
 ## Setup
 
 ### What ssh affects
@@ -142,6 +142,7 @@ Manage openssh server
 * `package`: Specifies the package to install. Valid options: string. Default: os specific
 * `challenge_response_authentication`: Specifies whether to set ChallengeResponseAuthentication. Valid options: 'true' and 'false'. Default: 'false'.
 * `password_authentication`: Specifies whether to set PasswordAuthentication. Valid options: 'true' and 'false'. Default: 'true'.
+*  root_authentication: Specifies root login possibilities. Valid options; 'yes', 'no', 'without-password', 'prohibit-password', 'forced-commands-only'. Default: 'prohibit-password'.
 * `x11_forwading`: Specifies whether to set X11Forwarding. Valid options: 'true' and 'false'. Default: 'true'.
 * `print_mod`: Specifies whether to set PrintMotd. Valid options: 'true' and 'false'. Default: 'false'.
 

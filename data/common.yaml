@@ -1,0 +1,4 @@
+ssh::service: 'ssh'
+ssh::client_package: undef
+ssh::server_package: undef
+ssh::root::authentication: prohibit-password

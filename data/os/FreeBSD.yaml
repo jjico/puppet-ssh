@@ -1,0 +1,3 @@
+ssh::service: 'sshd'
+ssh::client_package: undef
+ssh::server_package: undef
