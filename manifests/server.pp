@@ -7,6 +7,8 @@ class ssh::server (
   Boolean $x11_forwading                         = true,
   Boolean $print_mod                             = false,
   Optional[String] $package                      = $server_package,
+  Stdlib::Ensure::Serivce $ensure                = 'running',
+  Boolean $enabled                               = true,
 ) {
 
   $_challenge_response_authentication = bool2str(
@@ -33,11 +35,16 @@ class ssh::server (
 
   file { '/etc/ssh/sshd_config':
     owner   => 'root',
-    group   => 'root',
+    group   => $ssh::group,
     mode    => '0644',
-    content => template('ssh/'),
+    content => template('ssh/sshd_config.erb'),
     require => $require,
-    notify  => Service['sshd'],
+    notify  => Service[$ssh::service],
     validate_cmd => 'sshd -t -f %'
+  }
+
+  service { "$ssh::service":
+    ensure  => $ensure,
+    enabled => $enabled
   }
 }
